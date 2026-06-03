@@ -30,7 +30,7 @@ import {
 } from 'lucide-react';
 
 type Locale = 'en' | 'zh-CN';
-type PageId = 'leaderboards' | 'arena' | 'more';
+type PageId = 'leaderboards' | 'arena' | 'blog' | 'more';
 type ArenaId = 'idea' | 'experiment' | 'writing' | 'plotting';
 type RoundId =
   | 'idea-round-1'
@@ -53,7 +53,7 @@ type SubmissionFormValues = {
 
 const LOCALE_STORAGE_KEY = 'research-claw-arena-locale';
 const LOCALE_QUERY_KEY = 'lang';
-const DETAILS_REPO_URL = 'https://github.com/SUSTech-GenAI/research-claw-arena-details';
+const DETAILS_REPO_URL = 'https://github.com/agentos-openlab/research-claw-arena-details';
 const DETAILS_REPO_IDEA_URL = `${DETAILS_REPO_URL}/tree/main/Idea`;
 const SUBMISSION_EMAIL = 'guanghaojin56@gmail.com';
 const SUBMISSION_ENDPOINT = `https://formsubmit.co/ajax/${SUBMISSION_EMAIL}`;
@@ -157,10 +157,31 @@ const translations = {
         label: 'Arena',
         description: 'Arena tracks and round selection',
       },
+      blog: {
+        label: 'Blog',
+        description: 'Notes from ongoing product work',
+      },
       more: {
         label: 'More',
         description: 'External links and future open details',
       },
+    },
+    blog: {
+      badge: 'Blog',
+      title: 'Product Notes',
+      intro:
+        'This section is reserved for future blog posts about what we learn while building the product, running evaluations, and refining the benchmark.',
+      status: 'Preparing',
+      featuredLabel: 'Planned Column',
+      featuredTitle: 'In-progress product notes',
+      featuredBody:
+        'We plan to publish short technical posts here: what changed, why it changed, what failed, and what we learned from the process.',
+      topicsTitle: 'What will appear here',
+      topics: [
+        'Benchmark design updates and evaluation rule changes',
+        'Lessons from product iteration, tooling, and agent workflow design',
+        'Round-by-round notes on data quality, failure cases, and release decisions',
+      ],
     },
     more: {
       badge: 'More',
@@ -366,10 +387,29 @@ const translations = {
         label: '竞技场',
         description: '竞技场赛道与回合选择',
       },
+      blog: {
+        label: '博客',
+        description: '产品进行中的记录与心得',
+      },
       more: {
         label: '更多',
         description: '外部链接与后续开源内容',
       },
+    },
+    blog: {
+      badge: '博客',
+      title: '产品博客',
+      intro: '这里会陆续发布我们在做产品、跑评测、调整 benchmark 过程中的一些记录和心得。',
+      status: '准备中',
+      featuredLabel: '计划中的栏目',
+      featuredTitle: '产品进行中的技术笔记',
+      featuredBody: '后续会在这里发布简短的技术文章，说明改了什么、为什么改、踩过哪些坑，以及最后得到的判断。',
+      topicsTitle: '后续会写的内容',
+      topics: [
+        'benchmark 设计更新，以及评测规则为什么这样定',
+        '产品迭代、工具链和 agent 工作流里的具体经验',
+        '每一轮发布里数据质量、失败案例和取舍过程的记录',
+      ],
     },
     more: {
       badge: '更多',
@@ -657,10 +697,16 @@ function buildPages(text: (typeof translations)[Locale]) {
       icon: FlaskConical,
     },
     {
+      id: 'blog' as const,
+      label: text.pages.blog.label,
+      description: text.pages.blog.description,
+      icon: BookOpen,
+    },
+    {
       id: 'more' as const,
       label: text.pages.more.label,
       description: text.pages.more.description,
-      icon: BookOpen,
+      icon: Paperclip,
     },
   ];
 }
@@ -823,7 +869,7 @@ export default function App() {
             </div>
 
             <a
-              href="https://github.com/SUSTech-GenAI/research-claw-arena"
+              href="https://github.com/agentos-openlab/research-claw-arena"
               target="_blank"
               rel="noreferrer"
               className="flex shrink-0 items-center gap-2 rounded-md bg-neutral-100 px-3 py-1.5 text-sm font-medium text-neutral-600 transition-colors hover:bg-neutral-200 hover:text-neutral-900"
@@ -836,7 +882,7 @@ export default function App() {
       </header>
 
       <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
-        <nav className="mb-6 grid grid-cols-3 gap-2 sm:gap-3 lg:hidden">
+        <nav className="mb-6 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3 lg:hidden">
           {pages.map((page) => {
             const Icon = page.icon;
             const active = page.id === activePage;
@@ -929,6 +975,8 @@ export default function App() {
               }}
               onSelectRound={setActiveRound}
             />
+          ) : activePage === 'blog' ? (
+            <BlogPage text={text} />
           ) : (
             <MorePage text={text} onOpenSubmissionModal={() => setIsSubmissionModalOpen(true)} />
           )}
@@ -1450,6 +1498,51 @@ function MorePage({
             <ChevronRight size={16} />
           </button>
         </div>
+      </section>
+    </>
+  );
+}
+
+function BlogPage({
+  text,
+}: {
+  text: (typeof translations)[Locale];
+}) {
+  return (
+    <>
+      <section className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-8">
+        <div className="max-w-3xl">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-neutral-100 px-3 py-1.5 text-sm font-medium text-neutral-700">
+            <BookOpen size={16} />
+            {text.blog.badge}
+          </div>
+          <h2 className="mb-4 text-xl font-bold sm:text-2xl">{text.blog.title}</h2>
+          <p className="leading-relaxed text-neutral-600">{text.blog.intro}</p>
+        </div>
+      </section>
+
+      <section className="grid gap-4 sm:gap-6 xl:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]">
+        <article className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-neutral-400">{text.blog.featuredLabel}</p>
+            <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">
+              {text.blog.status}
+            </span>
+          </div>
+          <h3 className="text-lg font-bold">{text.blog.featuredTitle}</h3>
+          <p className="mt-3 leading-relaxed text-neutral-600">{text.blog.featuredBody}</p>
+        </article>
+
+        <aside className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
+          <h3 className="text-lg font-bold">{text.blog.topicsTitle}</h3>
+          <div className="mt-4 space-y-3">
+            {text.blog.topics.map((topic) => (
+              <div key={topic} className="rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-3 text-sm leading-relaxed text-neutral-700">
+                {topic}
+              </div>
+            ))}
+          </div>
+        </aside>
       </section>
     </>
   );
