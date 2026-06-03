@@ -55,6 +55,7 @@ const LOCALE_STORAGE_KEY = 'research-claw-arena-locale';
 const LOCALE_QUERY_KEY = 'lang';
 const DETAILS_REPO_URL = 'https://github.com/agentos-openlab/research-claw-arena-details';
 const DETAILS_REPO_IDEA_URL = `${DETAILS_REPO_URL}/tree/main/Idea`;
+const HUGGING_FACE_URL = 'https://huggingface.co/agentos-openlab';
 const SUBMISSION_EMAIL = 'guanghaojin56@gmail.com';
 const SUBMISSION_ENDPOINT = `https://formsubmit.co/ajax/${SUBMISSION_EMAIL}`;
 const MAX_ATTACHMENT_SIZE_BYTES = 10 * 1024 * 1024;
@@ -223,6 +224,11 @@ const translations = {
       formValidationMessage: 'Please provide the submission details.',
       formValidationFileSize: 'Please upload a file smaller than 10 MB.',
       formDirectEmail: 'Direct email',
+      dataTitle: 'Future Data Release',
+      dataBody:
+        'Future benchmark data, result files, and related public artifacts will be released through our Hugging Face organization page.',
+      dataLinkLabel: 'Open Hugging Face page',
+      dataLinkHint: 'We will publish upcoming public datasets and release files there.',
     },
       leaderboards: {
         badge: 'Leaderboards',
@@ -448,6 +454,10 @@ const translations = {
       formValidationMessage: '请填写提交内容。',
       formValidationFileSize: '请上传小于 10 MB 的文件。',
       formDirectEmail: '直接发邮件',
+      dataTitle: '未来数据发布',
+      dataBody: '未来的 benchmark 数据、结果文件和相关公开材料会发布到我们的 Hugging Face 组织页。',
+      dataLinkLabel: '打开 Hugging Face 页面',
+      dataLinkHint: '后续公开数据集和发布文件会先放在这里。',
     },
       leaderboards: {
         badge: '排行榜',
@@ -1472,7 +1482,36 @@ function MorePage({
             ) : null}
           </div>
         </div>
+        <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
+          <div className="flex h-full flex-col gap-5">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+              <div className="min-w-0">
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
+                  {text.more.badge}
+                </div>
+                <h3 className="text-xl font-bold text-neutral-900">{text.more.dataTitle}</h3>
+              </div>
+              <a
+                href={HUGGING_FACE_URL}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700"
+              >
+                {text.more.dataLinkLabel}
+                <ExternalLink size={16} />
+              </a>
+            </div>
 
+            <p className="max-w-3xl leading-relaxed text-neutral-600">{text.more.dataBody}</p>
+
+            <div className="rounded-2xl border border-neutral-200 bg-neutral-50 px-4 py-4 text-sm leading-relaxed text-neutral-500">
+              {text.more.dataLinkHint}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
         <div className="rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm sm:p-6">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-blue-700">
             <Mail size={14} />
